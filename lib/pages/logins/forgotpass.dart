@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mini_commerce/components/button.dart';
-import 'package:mini_commerce/pages/createpass.dart';
+import 'package:mini_commerce/pages/logins/createpass.dart';
 
 
 class ForgotPassPage extends StatefulWidget {
