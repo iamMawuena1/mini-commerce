@@ -21,6 +21,9 @@ class _RegisterPageState extends State<RegisterPage> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
+  //keys to the form
+  final _formKey = GlobalKey<FormState>();
+
   @override
   void dispose() {
     super.dispose();
@@ -31,11 +34,16 @@ class _RegisterPageState extends State<RegisterPage> {
 
   //sign up method
   Future signUp() async {
-    if (passwordConfirmed()) {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
+    if (_formKey.currentState!.validate() && passwordConfirmed()) {
+      try {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text.trim(),
+          password: passwordController.text.trim(),
+        );
+      } catch (e) {
+        // Handle sign-up errors
+        return Text("Error signing up: $e");
+      }
     }
   }
 
@@ -55,84 +63,115 @@ class _RegisterPageState extends State<RegisterPage> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // img
-                Icon(
-                  Icons.app_registration_outlined,
-                  size: 100.0,
-                  color: Theme.of(context).colorScheme.inversePrimary,
-                ),
-                const SizedBox(height: 45),
-                //text
-                const Text(
-                  ' W E L C O M E',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 45.0,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // img
+                  Icon(
+                    Icons.app_registration_outlined,
+                    size: 100.0,
+                    color: Theme.of(context).colorScheme.inversePrimary,
                   ),
-                ),
-                const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Text(
-                    "Register here with your details in order to access affordable goods with safe delivery",
+                  const SizedBox(height: 45),
+                  //text
+                  const Text(
+                    ' W E L C O M E',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.inversePrimary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 45.0,
                     ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                //email field
-                MyTextField(
-                  controller: emailController,
-                  hintText: 'Email',
-                  obscuredText: false,
-                ),
-                const SizedBox(height: 10),
-                //password field
-                MyTextField(
-                  hintText: 'Password',
-                  obscuredText: true,
-                  controller: passwordController,
-                ),
-                const SizedBox(height: 10),
-                MyTextField(
-                  hintText: 'Confirm Password',
-                  obscuredText: true,
-                  controller: confirmPasswordController,
-                ),
-                const SizedBox(height: 10),
-                // login button
-                MyButton(
-                  onTap: signUp,
-                  child: const Text(
-                    'Register',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 25.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Already a member?'),
-                    GestureDetector(
-                      onTap: widget.showLoginPage,
-                      child: const Text(
-                        " Login Here",
-                        style: TextStyle(
-                          color: Colors.blue,
-                        ),
+                  const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Text(
+                      "Register here with your details in order to access affordable goods with safe delivery",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.inversePrimary,
                       ),
                     ),
-                  ],
-                )
-              ],
+                  ),
+                  const SizedBox(height: 20),
+                  //email field
+                  MyTextField(
+                    controller: emailController,
+                    hintText: 'Email',
+                    obscuredText: false,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter your email';
+                      }
+                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                          .hasMatch(value)) {
+                        return 'Please enter a valid email address';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  //password field
+                  MyTextField(
+                    hintText: 'Password',
+                    obscuredText: true,
+                    controller: passwordController,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter your password';
+                      }
+                      if (value.length < 6) {
+                        return 'Password must be at least 6 characters long';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  MyTextField(
+                    hintText: 'Confirm Password',
+                    obscuredText: true,
+                    controller: confirmPasswordController,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter your password';
+                      }
+                      if (value.length < 6) {
+                        return 'Password must be at least 6 characters long';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  // login button
+                  MyButton(
+                    onTap: signUp,
+                    child: const Text(
+                      'Register',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 25.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Already a member?'),
+                      GestureDetector(
+                        onTap: widget.showLoginPage,
+                        child: const Text(
+                          " Login Here",
+                          style: TextStyle(
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),
