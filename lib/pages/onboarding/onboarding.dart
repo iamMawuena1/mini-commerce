@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mini_commerce/home.dart';
+import 'package:mini_commerce/pages/logins/main_page.dart';
 import 'package:mini_commerce/pages/onboarding/intro_page1.dart';
 import 'package:mini_commerce/pages/onboarding/intro_page2.dart';
 import 'package:mini_commerce/pages/onboarding/intro_page3.dart';
@@ -62,7 +62,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) {
-                              return const HomePage();
+                              return const MainPage();
                             }),
                           );
                         },

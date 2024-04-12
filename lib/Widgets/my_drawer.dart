@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_commerce/Widgets/my_tile.dart';
 
@@ -49,7 +50,9 @@ class MyDrawer extends StatelessWidget {
             child: CustomListTile(
               text: 'Logout',
               icon: Icons.logout_rounded,
-              onTap: () {},
+              onTap: () {
+                FirebaseAuth.instance.signOut();
+              },
             ),
           ),
         ],

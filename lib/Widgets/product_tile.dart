@@ -94,7 +94,13 @@ class ProductTile extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('GHc ${product.price.toStringAsFixed(2)}'),
+              Text(
+                'GHc ${product.price.toStringAsFixed(2)}',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
 
               //add to cart button
               Container(

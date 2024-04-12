@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_commerce/Widgets/product_tile.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +11,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser!;
     //access products in shop
     final products = context.watch<Shop>().shop;
 
@@ -34,6 +36,18 @@ class HomePage extends StatelessWidget {
       drawer: const MyDrawer(),
       body: ListView(
         children: [
+          // welcome user
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            child: Text(
+              "Welcome ${user.email!}",
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
           //shop subtitle
           Center(
             child: Text(

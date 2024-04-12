@@ -91,7 +91,11 @@ class CartPage extends StatelessWidget {
               onTap: () => payButtonPressed(context),
               child: const Text(
                 "P A Y",
-                style: TextStyle(fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
               ),
             ),
           ),
